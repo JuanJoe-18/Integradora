@@ -2,6 +2,8 @@ package ui;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
+
+import model.CardType;
 import model.TournamentController;
 
 
@@ -11,8 +13,8 @@ public class IcesiFootballTournament {
     public TournamentController ctrl;
 
     public static void main(String[] args) {
-        IcesiFootballTournament executable = new IcesiFootballTournament();
-        executable.mainMenu();
+        IcesiFootballTournament exe = new IcesiFootballTournament();
+        exe.mainMenu();
     }
 
     public IcesiFootballTournament() {
@@ -42,7 +44,7 @@ public class IcesiFootballTournament {
                     firstMenu();
                     break;
                 case 2:
-                    //secondMenu();
+                    secondMenu();
                     break;
                 case 0:
                     System.out.println("Thanks for using the program and for your participation in the Icesi University football tournament. Come back soon.");
@@ -96,7 +98,7 @@ public class IcesiFootballTournament {
                     registerResult();
                     break;
                 case 8:
-                    //secondMenu();
+                    secondMenu();
                     break;
                 case 0:
                     System.out.println("Thanks for using the program and for your participation in the Icesi University football tournament. Come back soon.");
@@ -116,16 +118,20 @@ public class IcesiFootballTournament {
             System.out.println("""
                     1. Register goal by player and his assist
                     2. Register cards by players
+                    3. See standings
                     0. Exit
                     """);
             option = rd.nextInt();
             rd.nextLine();
             switch (option) {
                 case 1:
-                    //registerGoalByPlayer();
+                    registerGoalByPlayer();
                     break;
                 case 2:
-                    //registerCardsByPlayers();
+                    registerCardsByPlayers();
+                    break;
+                case 3:
+                    System.out.println(ctrl.showStandings());
                     break;
                 case 0:
                     System.out.println("Thanks for using the program and for your participation in the Icesi University football tournament. Come back soon.");
@@ -285,6 +291,7 @@ public class IcesiFootballTournament {
      *
      */
     public void registerResult() {
+        rd.nextLine();
         System.out.println("Enter the name of team 1:");
         String teamName1 = rd.nextLine();
         System.out.println("Enter the name of team 2:");
@@ -301,25 +308,45 @@ public class IcesiFootballTournament {
             System.out.println("Error registering the result");
         }
     }
-/*
+
     public void registerGoalByPlayer() {
-        System.out.println("Enter the name of the team");
-        String teamName = rd.nextLine();
+        System.out.println("Enter the name of team 1");
+        String team1Name = rd.nextLine();
+        System.out.println("Enter the name of team 2");
+        String team2Name = rd.nextLine();
         System.out.println("Enter the shirt number of the player");
         int shirtNumber = rd.nextInt();
         rd.nextLine();
         System.out.println("Enter the name of the player");
         String playerName = rd.nextLine();
-        rd.nextLine();
         System.out.println("Enter the name of the player who assisted the goal");
         String assistPlayerName = rd.nextLine();
-        Goal goal = new Goal(playerName, assistPlayerName);
-        boolean success = ctrl.registerGoalByPlayer(teamName, shirtNumber, goal);
+        boolean success = ctrl.registerGoalByPlayer(team1Name, team2Name, shirtNumber, playerName, assistPlayerName);
         if (success) {
             System.out.println("Goal registered successfully");
         } else {
             System.out.println("Error registering the goal");
         }
-    }*/
+    }
+
+    public void registerCardsByPlayers() {
+        System.out.println("Enter the name of team 1:");
+        String teamName1 = rd.nextLine();
+        System.out.println("Enter the name of team 2:");
+        String teamName2 = rd.nextLine();
+        System.out.println("Enter the name of the player:");
+        String playerName = rd.nextLine();
+        System.out.println("Enter the type of card (YELLOW/RED):");
+        String cardTypeInput = rd.nextLine().toUpperCase();
+        CardType cardType = CardType.valueOf(cardTypeInput);
+
+        boolean success = ctrl.registerCardtoPlayer(teamName1, teamName2, playerName, cardType);
+        if (success) {
+            System.out.println("Card registered successfully");
+        } else {
+            System.out.println("Error registering the card");
+        }
+    }
+
 
 }

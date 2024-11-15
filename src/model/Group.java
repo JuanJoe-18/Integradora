@@ -3,6 +3,7 @@ package model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class Group {
 
@@ -133,6 +134,26 @@ public class Group {
         }
         return sb.toString();
     }
+
+    public void calculateStandings() {
+        teams.sort(Comparator.comparingInt(Team::getGoalDifference).reversed()
+                .thenComparingInt(Team::getGoalsFor).reversed()
+                .thenComparingInt(Team::getGoalsAgainst));
+    }
+
+    public String showStandings() {
+        calculateStandings();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Standings for Group ").append(name).append(":\n");
+        for (Team team : teams) {
+            sb.append(team).append("\n");
+        }
+        return sb.toString();
+    }
+
+
+
+
 
     /**
      * Description: This method returns the information of the group

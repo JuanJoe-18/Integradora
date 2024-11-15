@@ -12,6 +12,7 @@ public class Match {
     private int team2Goals;
     private LocalDateTime dateTime;
     private ArrayList<Goal> goals;
+    private ArrayList<Card> cards;
 
     /**
      * Description: Constructor to initialize a Match object
@@ -29,6 +30,11 @@ public class Match {
         this.referees = new ArrayList<>();
         this.dateTime = dateTime;
         this.goals = new ArrayList<>();
+        this.cards = new ArrayList<>();
+    }
+
+    public Match() {
+        cards = new ArrayList<>();
     }
 
     public Match(Team team1, Team team2) {
@@ -37,6 +43,10 @@ public class Match {
 
     public void addGoal(Goal goal) {
         goals.add(goal);
+    }
+
+    public void registerCard(String teamName, String playerName, CardType cardType) {
+        cards.add(new Card(teamName, playerName, cardType));
     }
 
 
@@ -87,6 +97,22 @@ public class Match {
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public void addCard(Card card) {
+        cards.add(card);
+    }
+
+    public ArrayList<Card> getCards() {
+        return cards;
+    }
+
+    public ArrayList<Goal> getGoals() {
+        return goals;
+    }
+
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
     }
 
     /**

@@ -194,23 +194,14 @@ public class TournamentController {
 
         for (Team team : groupA.getTeams()) {
             if (team.getName().equalsIgnoreCase(teamName)) {
-                boolean result = team.registerPlayer(shirtNumber, playerName, countryEnum, positionEnum);
-                if (!result) {
-                    System.err.println("Error: Player could not be registered in Group A team " + teamName);
-                }
-                return result;
+                return team.registerPlayer(shirtNumber, playerName, countryEnum, positionEnum);
             }
         }
         for (Team team : groupB.getTeams()) {
             if (team.getName().equalsIgnoreCase(teamName)) {
-                boolean result = team.registerPlayer(shirtNumber, playerName, countryEnum, positionEnum);
-                if (!result) {
-                    System.err.println("Error: Player could not be registered in Group B team " + teamName);
-                }
-                return result;
+                return team.registerPlayer(shirtNumber, playerName, countryEnum, positionEnum);
             }
         }
-        System.err.println("Error: Team " + teamName + " not found");
         return false; // Team not found
     }
 
@@ -385,10 +376,11 @@ public class TournamentController {
         return true;
     }
 
-    public boolean registerGoalByPlayer(String teamName, int shirtNumber, Goal goal) {
+    public boolean registerGoalByPlayer(String team1Name, String team2Name, int shirtNumber, String playerName, String assistPlayerName) {
+        Goal goal = new Goal(playerName, assistPlayerName);
         for (Day day : groupA.getDays()) {
             for (Match match : day.getMatches()) {
-                if (match.getTeam1().getName().equalsIgnoreCase(teamName) || match.getTeam2().getName().equalsIgnoreCase(teamName)) {
+                if ((match.getTeam1().getName().equalsIgnoreCase(team1Name) && match.getTeam2().getName().equalsIgnoreCase(team2Name)) || (match.getTeam1().getName().equalsIgnoreCase(team2Name) && match.getTeam2().getName().equalsIgnoreCase(team1Name))) {
                     match.addGoal(goal);
                     return true;
                 }
@@ -396,12 +388,69 @@ public class TournamentController {
         }
         for (Day day : groupB.getDays()) {
             for (Match match : day.getMatches()) {
-                if (match.getTeam1().getName().equalsIgnoreCase(teamName) || match.getTeam2().getName().equalsIgnoreCase(teamName)) {
+                if ((match.getTeam1().getName().equalsIgnoreCase(team1Name) && match.getTeam2().getName().equalsIgnoreCase(team2Name)) || (match.getTeam1().getName().equalsIgnoreCase(team2Name) && match.getTeam2().getName().equalsIgnoreCase(team1Name))) {
                     match.addGoal(goal);
                     return true;
                 }
             }
         }
+        return false; // Match not found
+    }
+
+    public boolean registerCardtoPlayer(String teamName1, String teamName2, String playerName, CardType cardType) {
+        System.out.println("Debug: Iniciando registro de tarjeta");
+        System.out.println("Debug: teamName1 = " + teamName1 + ", teamName2 = " + teamName2 + ", playerName = " + playerName + ", cardType = " + cardType);
+
+        if (registerCard(groupA, teamName1, teamName2, playerName, cardType)) {
+            return true;
+        }
+
+        if (registerCard(groupB, teamName1, teamName2, playerName, cardType)) {
+            return true;
+        }
+
+        System.err.println("Error: Partido no encontrado");
+        return false; // Match not found
+    }
+
+    private boolean registerCard(Group group, String teamName1, String teamName2, String playerName, CardType cardType) {
+        for (Day day : group.getDays()) {
+            for (Match match : day.getMatches()) {
+                if ((match.getTeam1().getName().equalsIgnoreCase(teamName1) && match.getTeam2().getName().equalsIgnoreCase(teamName2)) ||
+                        (match.getTeam1().getName().equalsIgnoreCase(teamName2) && match.getTeam2().getName().equalsIgnoreCase(teamName1))) {
+                    System.out.println("Debug: Partido encontrado en el " + group.getName());
+                    if (match.getTeam1().hasPlayer(playerName) || match.getTeam2().hasPlayer(playerName)) {
+                        match.registerCard(teamName1, playerName, cardType);
+                        System.out.println("Debug: Tarjeta registrada exitosamente en el " + group.getName());
+                        return true;
+                    } else {
+                        System.err.println("Error: Jugador no encontrado en los equipos del partido");
+                        return false;
+                    }
+                }
+            }
+        }
         return false;
+    }
+
+    public String showStandings() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("-----------------------------------------------------------\n");
+        sb.append("//////////////////////////Standings////////////////////////\n");
+        sb.append("-----------------------------------------------------------\n");
+        sb.append("| Grupo A |\n");
+        sb.append("-----------------------------------------------------------\n");
+        sb.append(groupA.showStandings());
+        sb.append("-----------------------------------------------------------\n");
+        sb.append("| Grupo B |\n");
+        sb.append("-----------------------------------------------------------\n");
+        sb.append(groupB.showStandings());
+        sb.append("-----------------------------------------------------------\n");
+        return sb.toString();
+
+
+
+
+
     }
 }

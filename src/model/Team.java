@@ -11,6 +11,8 @@ public class Team {
     private String country;
     private String nameTechnicalDirector;
     private ArrayList<Player> players;
+    private int goalsFor;
+    private int goalsAgainst;
 
     /**
      * Description: Constructor to initialize a Team object
@@ -23,6 +25,8 @@ public class Team {
         this.country = country;
         this.nameTechnicalDirector = nameTechnicalDirector;
         this.players = new ArrayList<Player>(20);
+        this.goalsFor = 0;
+        this.goalsAgainst = 0;
     }
 
     public String getName() {
@@ -55,6 +59,23 @@ public class Team {
 
     public void setPlayers(ArrayList<Player> players) {
         this.players = players;
+    }
+
+    public int getGoalsFor() {
+        return goalsFor;
+    }
+
+    public int getGoalsAgainst() {
+        return goalsAgainst;
+    }
+
+    public int getGoalDifference() {
+        return goalsFor - goalsAgainst;
+    }
+
+    public void addMatchResult(int goalsFor, int goalsAgainst) {
+        this.goalsFor += goalsFor;
+        this.goalsAgainst += goalsAgainst;
     }
 
     /**
@@ -125,6 +146,15 @@ public class Team {
         Player player = new Player(shirtNumber, name, country, position);
         players.add(player);
         return true;
+    }
+
+    public boolean hasPlayer(String playerName) {
+        for (Player player : players) { // Asumiendo que tienes una lista de jugadores llamada 'players'
+            if (player.getName().equalsIgnoreCase(playerName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
