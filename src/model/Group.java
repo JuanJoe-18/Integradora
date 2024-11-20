@@ -136,7 +136,8 @@ public class Group {
     }
 
     public void calculateStandings() {
-        teams.sort(Comparator.comparingInt(Team::getGoalDifference).reversed()
+        teams.sort(Comparator.comparingInt(Team::getPoints).reversed()
+                .thenComparingInt(Team::getGoalDifference).reversed()
                 .thenComparingInt(Team::getGoalsFor).reversed()
                 .thenComparingInt(Team::getGoalsAgainst));
     }
@@ -144,16 +145,17 @@ public class Group {
     public String showStandings() {
         calculateStandings();
         StringBuilder sb = new StringBuilder();
-        sb.append("Standings for Group ").append(name).append(":\n");
+        sb.append("Grupo ").append(name).append("\n");
+        sb.append(String.format("%-20s %2s %2s %2s %2s %3s %3s %3s %4s\n", "CLUB", "PJ", "G", "E", "P", "GF", "GC", "DG", "Pts"));
+        int position = 1;
         for (Team team : teams) {
-            sb.append(team).append("\n");
+            sb.append(String.format("%d. %-17s %2d %2d %2d %2d %3d %3d %3d %4d\n",
+                    position++, team.getName(), team.getPlayedMatches(), team.getWonMatches(),
+                    team.getDrawnMatches(), team.getLostMatches(), team.getGoalsFor(),
+                    team.getGoalsAgainst(), team.getGoalDifference(), team.getPoints()));
         }
         return sb.toString();
     }
-
-
-
-
 
     /**
      * Description: This method returns the information of the group

@@ -11,8 +11,13 @@ public class Team {
     private String country;
     private String nameTechnicalDirector;
     private ArrayList<Player> players;
+    private int playedMatches;
+    private int wonMatches;
+    private int drawnMatches;
+    private int lostMatches;
     private int goalsFor;
     private int goalsAgainst;
+    private int points;
 
     /**
      * Description: Constructor to initialize a Team object
@@ -25,13 +30,19 @@ public class Team {
         this.country = country;
         this.nameTechnicalDirector = nameTechnicalDirector;
         this.players = new ArrayList<Player>(20);
+        this.playedMatches = 0;
+        this.wonMatches = 0;
+        this.drawnMatches = 0;
+        this.lostMatches = 0;
         this.goalsFor = 0;
         this.goalsAgainst = 0;
+        this.points = 0;
     }
 
     public String getName() {
         return name;
     }
+
 
     public void setName(String name) {
         this.name = name;
@@ -60,6 +71,21 @@ public class Team {
     public void setPlayers(ArrayList<Player> players) {
         this.players = players;
     }
+    public int getPlayedMatches() {
+        return playedMatches;
+    }
+
+    public int getWonMatches() {
+        return wonMatches;
+    }
+
+    public int getDrawnMatches() {
+        return drawnMatches;
+    }
+
+    public int getLostMatches() {
+        return lostMatches;
+    }
 
     public int getGoalsFor() {
         return goalsFor;
@@ -76,6 +102,38 @@ public class Team {
     public void addMatchResult(int goalsFor, int goalsAgainst) {
         this.goalsFor += goalsFor;
         this.goalsAgainst += goalsAgainst;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPlayedMatches(int playedMatches) {
+        this.playedMatches = playedMatches;
+    }
+
+    public void setWonMatches(int wonMatches) {
+        this.wonMatches = wonMatches;
+    }
+
+    public void setDrawnMatches(int drawnMatches) {
+        this.drawnMatches = drawnMatches;
+    }
+
+    public void setLostMatches(int lostMatches) {
+        this.lostMatches = lostMatches;
+    }
+
+    public void setGoalsFor(int goalsFor) {
+        this.goalsFor = goalsFor;
+    }
+
+    public void setGoalsAgainst(int goalsAgainst) {
+        this.goalsAgainst = goalsAgainst;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     /**

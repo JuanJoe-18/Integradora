@@ -119,6 +119,7 @@ public class IcesiFootballTournament {
                     1. Register goal by player and his assist
                     2. Register cards by players
                     3. See standings
+                    4. Show statistics of the tournament
                     0. Exit
                     """);
             option = rd.nextInt();
@@ -132,6 +133,9 @@ public class IcesiFootballTournament {
                     break;
                 case 3:
                     System.out.println(ctrl.showStandings());
+                    break;
+                case 4:
+                    System.out.println(ctrl.showStatistics());
                     break;
                 case 0:
                     System.out.println("Thanks for using the program and for your participation in the Icesi University football tournament. Come back soon.");
@@ -336,11 +340,12 @@ public class IcesiFootballTournament {
         String teamName2 = rd.nextLine();
         System.out.println("Enter the name of the player:");
         String playerName = rd.nextLine();
+        System.out.println("Enter the name of the referee:");
+        String refereeName = rd.nextLine();
         System.out.println("Enter the type of card (YELLOW/RED):");
-        String cardTypeInput = rd.nextLine().toUpperCase();
-        CardType cardType = CardType.valueOf(cardTypeInput);
-
-        boolean success = ctrl.registerCardtoPlayer(teamName1, teamName2, playerName, cardType);
+        String cardTypeUpperCase = rd.nextLine().toUpperCase();
+        CardType cardType = CardType.valueOf(cardTypeUpperCase);
+        boolean success = ctrl.registerCardtoPlayer(teamName1, teamName2, playerName, cardType, refereeName);
         if (success) {
             System.out.println("Card registered successfully");
         } else {

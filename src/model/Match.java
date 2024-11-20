@@ -45,10 +45,6 @@ public class Match {
         goals.add(goal);
     }
 
-    public void registerCard(String teamName, String playerName, CardType cardType) {
-        cards.add(new Card(teamName, playerName, cardType));
-    }
-
 
     public ArrayList<Referee> getReferees() {
         return referees;
@@ -113,6 +109,10 @@ public class Match {
 
     public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
+    }
+
+    public boolean hasPlayer(String playerName) {
+        return team1.hasPlayer(playerName) || team2.hasPlayer(playerName);
     }
 
     /**

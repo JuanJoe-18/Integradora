@@ -4,12 +4,14 @@ public class Card {
     private String teamName;
     private String playerName;
     private CardType cardType;
+    private Referee referee;
 
 
-    public Card(String teamName, String playerName, CardType cardType) {
+    public Card(String teamName, String playerName, CardType cardType, Referee referee) {
         this.teamName = teamName;
         this.playerName = playerName;
         this.cardType = cardType;
+        this.referee = referee;
     }
 
     public String getTeamName() {
@@ -36,9 +38,13 @@ public class Card {
         this.cardType = cardType;
     }
 
+    public Referee getReferee() {
+        return referee;
+    }
+
     @Override
     public String toString() {
-        return cardType + " card for " + playerName + " from " + teamName;
+        return cardType + " card for " + playerName + " from " + teamName + " by " + referee.getName();
     }
 
 
