@@ -33,9 +33,7 @@ public class Match {
         this.cards = new ArrayList<>();
     }
 
-    public Match() {
-        cards = new ArrayList<>();
-    }
+
 
     public Match(Team team1, Team team2) {
         this(team1, team2, 0, 0, LocalDateTime.now());
@@ -109,10 +107,6 @@ public class Match {
 
     public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
-    }
-
-    public boolean hasPlayer(String playerName) {
-        return team1.hasPlayer(playerName) || team2.hasPlayer(playerName);
     }
 
     /**

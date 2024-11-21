@@ -59,6 +59,8 @@ public class IcesiFootballTournament {
 
     }
 
+
+
     public void firstMenu (){
         int option;
         do {
@@ -101,7 +103,6 @@ public class IcesiFootballTournament {
                     secondMenu();
                     break;
                 case 0:
-                    System.out.println("Thanks for using the program and for your participation in the Icesi University football tournament. Come back soon.");
                     break;
                 default:
                     System.out.println("Invalid option");
@@ -132,13 +133,12 @@ public class IcesiFootballTournament {
                     registerCardsByPlayers();
                     break;
                 case 3:
-                    System.out.println(ctrl.showStandings());
+                    showStandings();
                     break;
                 case 4:
-                    System.out.println(ctrl.showStatistics());
+                    showStatistics();
                     break;
                 case 0:
-                    System.out.println("Thanks for using the program and for your participation in the Icesi University football tournament. Come back soon.");
                     break;
                 default:
                     System.out.println("Invalid option");
@@ -275,6 +275,7 @@ public class IcesiFootballTournament {
      *
      */
     public void assignRefereeToMatch() {
+        rd.nextLine();
         System.out.println("Enter the id of the referee");
         String refereeId = rd.nextLine();
         System.out.println("Enter the name of the team1");
@@ -305,6 +306,12 @@ public class IcesiFootballTournament {
         System.out.println("Enter the goals scored by " + teamName2 + ":");
         int team2Goals = rd.nextInt();
         rd.nextLine(); // Consume the newline character
+
+        if (team1Goals == 0 && team2Goals == 0) {
+            System.out.println("Error: No goals scored in the match.");
+            return;
+        }
+
         boolean success = ctrl.registerResult(teamName1, teamName2, team1Goals, team2Goals);
         if (success) {
             System.out.println("Result registered successfully");
@@ -340,11 +347,16 @@ public class IcesiFootballTournament {
         String teamName2 = rd.nextLine();
         System.out.println("Enter the name of the player:");
         String playerName = rd.nextLine();
-        System.out.println("Enter the name of the referee:");
-        String refereeName = rd.nextLine();
         System.out.println("Enter the type of card (YELLOW/RED):");
         String cardTypeUpperCase = rd.nextLine().toUpperCase();
         CardType cardType = CardType.valueOf(cardTypeUpperCase);
+
+        String refereeName = ctrl.getCentralRefereeForMatch(teamName1, teamName2);
+        if (refereeName == null) {
+            System.out.println("Error: No central referee assigned to the match.");
+            return;
+        }
+
         boolean success = ctrl.registerCardtoPlayer(teamName1, teamName2, playerName, cardType, refereeName);
         if (success) {
             System.out.println("Card registered successfully");
@@ -354,4 +366,72 @@ public class IcesiFootballTournament {
     }
 
 
-}
+
+
+    public void showStandings() {
+        System.out.println(ctrl.showStandings());
+    }
+
+    public void showStatistics() {
+        int option;
+        do {
+            System.out.println("""
+                    1. Show generic statistics of the tournament
+                    2. Show statistics of a team
+                    3. Show statistics of a player
+                    0. Exit
+                    """);
+            option = rd.nextInt();
+            rd.nextLine();
+            switch (option) {
+                case 1:
+                    System.out.println(ctrl.showStatistics());
+                    break;
+                case 2:
+                    showTeamEfficiency();
+                    break;
+                case 3:
+                    showPlayerEfficiency();
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Invalid option");
+                    break;
+            }
+        } while (option != 0);
+    }
+
+    public void showTeamEfficiency() {
+        System.out.println("Enter the name of the team:");
+        String teamName = rd.nextLine();
+
+        double efficiency = ctrl.getTeamEfficiency(teamName);
+        if (efficiency >= 0) {
+            System.out.println("Team " + teamName + "has an efficiency rating of" + efficiency);
+        } else {
+            System.out.println("Team not found.");
+        }
+    }
+
+    public void showPlayerEfficiency() {
+        System.out.println("Enter the name of the team:");
+        String teamName = rd.nextLine();
+        System.out.println("Enter the shirt number of the player:");
+        int shirtNumber = rd.nextInt();
+        rd.nextLine();
+        System.out.println("Enter the name of the player:");
+        String playerName = rd.nextLine();
+
+        double efficiency = ctrl.getPlayerEfficiency(teamName, shirtNumber, playerName);
+        if (efficiency >= 0) {
+            System.out.println("The efficiency of the player " + playerName + " is: " + efficiency);
+        } else {
+            System.out.println("Player not found.");
+        }
+    }
+ }
+
+
+
+

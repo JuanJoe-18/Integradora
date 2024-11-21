@@ -1,7 +1,7 @@
 package model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.*;
 
 public class TournamentController {
 
@@ -98,20 +98,53 @@ public class TournamentController {
      * pre: referees must be initialized.
      * pos: the referees that are part of the tournament are preloaded.
      */
+    /*
+    SIERRA_LEONE,
+    SINGAPORE,
+    SLOVAKIA,
+    SLOVENIA,
+    SOLOMON_ISLANDS,
+    SOMALIA,
+    SOUTH_AFRICA,
+    SOUTH_SUDAN,
+    SPAIN,
+    SRI_LANKA,
+    SUDAN,
+    SURINAME,
+    SWEDEN,
+    SWITZERLAND,
+    SYRIA,
+    TAIWAN,
+    TAJIKISTAN,
+    TANZANIA,
+    THAILAND,
+    TIMOR_LESTE,
+    TOGO,
+    TONGA,
+    TRINIDAD_AND_TOBAGO,
+    TUNISIA,
+    TURKEY,
+    TURKMENISTAN,
+    TUVALU,
+    UGANDA
+    *
+    *
+    *
+    * */
 
     public void preLoadReferees() {
-        referees.add(new Referee("1", "Juan", "Colombia", "C"));
-        referees.add(new Referee("2", "Pedro", "Spain", "C"));
-        referees.add(new Referee("3", "Luis", "Colombia", "A"));
-        referees.add(new Referee("4", "Carlos", "Spain", "A"));
-        referees.add(new Referee("5", "Jose", "England", "C"));
+        referees.add(new Referee("1", "Juan", "Colombia", "A"));
+        referees.add(new Referee("2", "Pedro", "Spain", "A"));
+        referees.add(new Referee("3", "Luis", "TUVALU", "A"));
+        referees.add(new Referee("4", "Carlos", "TURKEY", "C"));
+        referees.add(new Referee("5", "Jose", "TANZANIA", "A"));
         referees.add(new Referee("6", "Pep", "England", "C"));
         referees.add(new Referee("7", "Andrea", "Italy", "C"));
-        referees.add(new Referee("8", "JuanJoe", "Colombia", "A"));
-        referees.add(new Referee("9", "Juanito", "Colombia", "C"));
-        referees.add(new Referee("10", "Pedrito", "Spain", "C"));
-        referees.add(new Referee("11", "Luisito", "Colombia", "A"));
-        referees.add(new Referee("12", "Carlitos", "Spain", "C"));
+        referees.add(new Referee("8", "JuanJoe", "SUDAN", "C"));
+        referees.add(new Referee("9", "Juanito", "UGANDA", "A"));
+        referees.add(new Referee("10", "Pedrito", "URUGUAY", "A"));
+        referees.add(new Referee("11", "Luisito", "TAIWAN", "A"));
+        referees.add(new Referee("12", "Carlitos", "SLOVENIA", "A"));
     }
 
     /**
@@ -352,46 +385,34 @@ public class TournamentController {
      * @return boolean, true if the result of the match is registered successfully, false if the match is not found.
      */
 
+    // TournamentController.java
     public boolean registerResult(String teamName1, String teamName2, int team1Goals, int team2Goals) {
-        Match match = null;
-        for (Day day : groupA.getDays()) {
-            for (Match m : day.getMatches()) {
-                if ((m.getTeam1().getName().equalsIgnoreCase(teamName1) && m.getTeam2().getName().equalsIgnoreCase(teamName2))
-                        || (m.getTeam1().getName().equalsIgnoreCase(teamName2) && m.getTeam2().getName().equalsIgnoreCase(teamName1))) {
-                    match = m;
-                    break;
-                }
-            }
-        }
-        if (match == null) {
-            for (Day day : groupB.getDays()) {
-                for (Match m : day.getMatches()) {
-                    if ((m.getTeam1().getName().equalsIgnoreCase(teamName1) && m.getTeam2().getName().equalsIgnoreCase(teamName2))
-                            || (m.getTeam1().getName().equalsIgnoreCase(teamName2) && m.getTeam2().getName().equalsIgnoreCase(teamName1))) {
-                        match = m;
-                        break;
-                    }
-                }
-            }
-        }
+        Match match = findMatch(teamName1, teamName2);
         if (match == null) {
             System.err.println("Error: Match not found");
             return false;
         }
+
+        // Obtener los goles ya registrados
+        int existingTeam1Goals = match.getTeam1Goals();
+        int existingTeam2Goals = match.getTeam2Goals();
+
+        // Actualizar los goles del partido
         match.setTeam1Goals(team1Goals);
         match.setTeam2Goals(team2Goals);
 
         Team team1 = match.getTeam1();
         Team team2 = match.getTeam2();
 
+        // Actualizar las estadísticas de los equipos
         team1.setPlayedMatches(team1.getPlayedMatches() + 1);
         team2.setPlayedMatches(team2.getPlayedMatches() + 1);
 
-        team1.setGoalsFor(team1.getGoalsFor() + team1Goals);
-        team1.setGoalsAgainst(team1.getGoalsAgainst() + team2Goals);
+        team1.setGoalsFor(team1.getGoalsFor() - existingTeam1Goals + team1Goals);
+        team1.setGoalsAgainst(team1.getGoalsAgainst() - existingTeam2Goals + team2Goals);
 
-        team2.setGoalsFor(team2.getGoalsFor() + team2Goals);
-        team2.setGoalsAgainst(team2.getGoalsAgainst() + team1Goals);
+        team2.setGoalsFor(team2.getGoalsFor() - existingTeam2Goals + team2Goals);
+        team2.setGoalsAgainst(team2.getGoalsAgainst() - existingTeam1Goals + team1Goals);
 
         if (team1Goals > team2Goals) {
             team1.setWonMatches(team1.getWonMatches() + 1);
@@ -408,36 +429,68 @@ public class TournamentController {
             team2.setPoints(team2.getPoints() + 1);
         }
 
+        updatePlayerMatchesPlayed(team1);
+        updatePlayerMatchesPlayed(team2);
+
+        // Actualizar los goles de los jugadores
+        updatePlayerGoals(team1, team1Goals - existingTeam1Goals);
+        updatePlayerGoals(team2, team2Goals - existingTeam2Goals);
+
         return true;
     }
 
+    private void updatePlayerMatchesPlayed(Team team) {
+        for (Player player : team.getPlayers()) {
+            player.setMatchesPlayed(player.getMatchesPlayed() + 1);
+        }
+    }
+
+    private void updatePlayerGoals(Team team, int goals) {
+        for (Player player : team.getPlayers()) {
+            player.setGoalsScored(player.getGoalsScored() + goals);
+        }
+    }
+
+    private Match findMatch(String teamName1, String teamName2) {
+        for (Day day : groupA.getDays()) {
+            for (Match match : day.getMatches()) {
+                if ((match.getTeam1().getName().equalsIgnoreCase(teamName1) && match.getTeam2().getName().equalsIgnoreCase(teamName2))
+                        || (match.getTeam1().getName().equalsIgnoreCase(teamName2) && match.getTeam2().getName().equalsIgnoreCase(teamName1))) {
+                    return match;
+                }
+            }
+        }
+        for (Day day : groupB.getDays()) {
+            for (Match match : day.getMatches()) {
+                if ((match.getTeam1().getName().equalsIgnoreCase(teamName1) && match.getTeam2().getName().equalsIgnoreCase(teamName2))
+                        || (match.getTeam1().getName().equalsIgnoreCase(teamName2) && match.getTeam2().getName().equalsIgnoreCase(teamName1))) {
+                    return match;
+                }
+            }
+        }
+        return null;
+    }
+
     public boolean registerGoalByPlayer(String team1Name, String team2Name, int shirtNumber, String playerName, String assistPlayerName) {
-        Goal goal = new Goal(playerName, assistPlayerName);
+        Match match = findMatchByTeams(team1Name, team2Name);
+        if (match != null) {
+            Player player = findPlayerByNameAndNumber(playerName, shirtNumber);
+            if (player != null) {
+                Goal goal = new Goal(playerName, assistPlayerName);
+                match.addGoal(goal);
+                player.incrementGoalsScored();
+                System.out.println("Updated goals scored for player: " + playerName + " to " + player.getGoalsScored());
+                return true;
+            }
+        }
+        return false;
+    }
+    private Match findMatchByTeams(String team1Name, String team2Name) {
         for (Day day : groupA.getDays()) {
             for (Match match : day.getMatches()) {
                 if ((match.getTeam1().getName().equalsIgnoreCase(team1Name) && match.getTeam2().getName().equalsIgnoreCase(team2Name)) ||
                         (match.getTeam1().getName().equalsIgnoreCase(team2Name) && match.getTeam2().getName().equalsIgnoreCase(team1Name))) {
-
-                    if (!match.getTeam1().hasPlayer(playerName) && !match.getTeam2().hasPlayer(playerName)) {
-                        System.err.println("Error: Player " + playerName + " is not in the match");
-                        return false;
-                    }
-
-                    match.addGoal(goal);
-
-                    // Update team statistics
-                    Team team1 = match.getTeam1();
-                    Team team2 = match.getTeam2();
-
-                    if (match.getTeam1().getName().equalsIgnoreCase(team1Name)) {
-                        team1.setGoalsFor(team1.getGoalsFor() + 1);
-                        team2.setGoalsAgainst(team2.getGoalsAgainst() + 1);
-                    } else {
-                        team2.setGoalsFor(team2.getGoalsFor() + 1);
-                        team1.setGoalsAgainst(team1.getGoalsAgainst() + 1);
-                    }
-
-                    return true;
+                    return match;
                 }
             }
         }
@@ -445,31 +498,28 @@ public class TournamentController {
             for (Match match : day.getMatches()) {
                 if ((match.getTeam1().getName().equalsIgnoreCase(team1Name) && match.getTeam2().getName().equalsIgnoreCase(team2Name)) ||
                         (match.getTeam1().getName().equalsIgnoreCase(team2Name) && match.getTeam2().getName().equalsIgnoreCase(team1Name))) {
-
-                    if (!match.getTeam1().hasPlayer(playerName) && !match.getTeam2().hasPlayer(playerName)) {
-                        System.err.println("Error: Player " + playerName + " is not in the match");
-                        return false;
-                    }
-
-                    match.addGoal(goal);
-
-                    // Update team statistics
-                    Team team1 = match.getTeam1();
-                    Team team2 = match.getTeam2();
-
-                    if (match.getTeam1().getName().equalsIgnoreCase(team1Name)) {
-                        team1.setGoalsFor(team1.getGoalsFor() + 1);
-                        team2.setGoalsAgainst(team2.getGoalsAgainst() + 1);
-                    } else {
-                        team2.setGoalsFor(team2.getGoalsFor() + 1);
-                        team1.setGoalsAgainst(team1.getGoalsAgainst() + 1);
-                    }
-
-                    return true;
+                    return match;
                 }
             }
         }
-        return false; // Match not found
+        return null; // Match not found
+    }
+    private Player findPlayerByNameAndNumber(String playerName, int shirtNumber) {
+        for (Team team : groupA.getTeams()) {
+            for (Player player : team.getPlayers()) {
+                if (player.getName().equalsIgnoreCase(playerName) && player.getShirtNumber() == shirtNumber) {
+                    return player;
+                }
+            }
+        }
+        for (Team team : groupB.getTeams()) {
+            for (Player player : team.getPlayers()) {
+                if (player.getName().equalsIgnoreCase(playerName) && player.getShirtNumber() == shirtNumber) {
+                    return player;
+                }
+            }
+        }
+        return null; // Player not found
     }
 
     public boolean registerCardtoPlayer(String teamName1, String teamName2, String playerName, CardType cardType, String refereeName) {
@@ -502,9 +552,15 @@ public class TournamentController {
             for (Match match : day.getMatches()) {
                 if ((match.getTeam1().getName().equalsIgnoreCase(teamName1) && match.getTeam2().getName().equalsIgnoreCase(teamName2)) ||
                         (match.getTeam1().getName().equalsIgnoreCase(teamName2) && match.getTeam2().getName().equalsIgnoreCase(teamName1))) {
+
                     if (match.getTeam1().hasPlayer(playerName) || match.getTeam2().hasPlayer(playerName)) {
-                        match.addCard(new Card(teamName1, playerName, cardType, referee));
-                        return true;
+                        if (match.getReferees().contains(referee)) {
+                            match.addCard(new Card(teamName1, playerName, cardType, referee));
+                            return true;
+                        } else {
+                            System.err.println("Error: Referee not assigned to the match");
+                            return false;
+                        }
                     } else {
                         System.err.println("Error: Player not found in the match teams");
                         return false;
@@ -538,188 +594,173 @@ public class TournamentController {
         sb.append("-----------------------------------------------------------\n");
         sb.append("Top Scorer: ").append(calculateTopScorer()).append("\n");
         sb.append("Fair Play Team: ").append(calculateFairPlayTeam()).append("\n");
-        sb.append("Team Efficiency: ").append(calculateTeamEfficiency()).append("\n");
-        sb.append("Player Efficiency: ").append(calculatePlayerEfficiency()).append("\n");
         sb.append("Referee Card Index: ").append(calculateRefereeCardIndex()).append("\n");
         sb.append("-----------------------------------------------------------\n");
         return sb.toString();
     }
-    private String calculateTopScorer() {
+
+    public String calculateTopScorer() {
         String topScorer = "";
         int maxGoals = 0;
+        HashMap<String, Integer> playerGoalsMap = new HashMap<>();
 
+        // Recorre todos los días y partidos del grupo A
         for (Day day : groupA.getDays()) {
+            System.out.println("Processing day in Group A: " + day);
             for (Match match : day.getMatches()) {
+                System.out.println("Processing match in Group A: " + match);
                 for (Goal goal : match.getGoals()) {
-                    int playerGoals = 0;
-                    for (Day d : groupA.getDays()) {
-                        for (Match m : d.getMatches()) {
-                            for (Goal g : m.getGoals()) {
-                                if (g.getPlayerName().equals(goal.getPlayerName())) {
-                                    playerGoals++;
-                                }
-                            }
-                        }
-                    }
-                    for (Day d : groupB.getDays()) {
-                        for (Match m : d.getMatches()) {
-                            for (Goal g : m.getGoals()) {
-                                if (g.getPlayerName().equals(goal.getPlayerName())) {
-                                    playerGoals++;
-                                }
-                            }
-                        }
-                    }
-                    if (playerGoals > maxGoals) {
-                        maxGoals = playerGoals;
-                        topScorer = goal.getPlayerName();
-                    }
+                    String playerName = goal.getPlayerName();
+                    playerGoalsMap.put(playerName, playerGoalsMap.getOrDefault(playerName, 0) + 1);
+                    System.out.println("Group A - Player: " + playerName + ", Goals: " + playerGoalsMap.get(playerName));
                 }
             }
         }
 
+        // Recorre todos los días y partidos del grupo B
+        for (Day day : groupB.getDays()) {
+            System.out.println("Processing day in Group B: " + day);
+            for (Match match : day.getMatches()) {
+                System.out.println("Processing match in Group B: " + match);
+                for (Goal goal : match.getGoals()) {
+                    String playerName = goal.getPlayerName();
+                    playerGoalsMap.put(playerName, playerGoalsMap.getOrDefault(playerName, 0) + 1);
+                    System.out.println("Group B - Player: " + playerName + ", Goals: " + playerGoalsMap.get(playerName));
+                }
+            }
+        }
+
+        // Encuentra el jugador con más goles
+        for (Map.Entry<String, Integer> entry : playerGoalsMap.entrySet()) {
+            if (entry.getValue() > maxGoals) {
+                maxGoals = entry.getValue();
+                topScorer = entry.getKey();
+            }
+        }
+
+        System.out.println("Top Scorer: " + topScorer + " with " + maxGoals + " goals");
         return topScorer + " with " + maxGoals + " goals";
     }
-    private String calculateFairPlayTeam() {
-        String fairPlayTeam = "";
+
+    public String calculateFairPlayTeam() {
+        Team fairPlayTeam = null;
         int minCards = Integer.MAX_VALUE;
 
-        for (Day day : groupA.getDays()) {
-            for (Match match : day.getMatches()) {
-                for (Card card : match.getCards()) {
-                    int teamCards = 0;
-                    for (Day d : groupA.getDays()) {
-                        for (Match m : d.getMatches()) {
-                            for (Card c : m.getCards()) {
-                                if (c.getTeamName().equals(card.getTeamName())) {
-                                    teamCards++;
-                                }
-                            }
-                        }
-                    }
-                    for (Day d : groupB.getDays()) {
-                        for (Match m : d.getMatches()) {
-                            for (Card c : m.getCards()) {
-                                if (c.getTeamName().equals(card.getTeamName())) {
-                                    teamCards++;
-                                }
-                            }
-                        }
-                    }
-                    if (teamCards < minCards) {
-                        minCards = teamCards;
-                        fairPlayTeam = card.getTeamName();
-                    }
-                }
+        for (Team team : getAllTeams()) {
+            int totalCards = team.getYellowCards() + team.getRedCards();
+            if (totalCards < minCards) {
+                minCards = totalCards;
+                fairPlayTeam = team;
             }
         }
 
-        return fairPlayTeam + " with " + minCards + " cards";
+        return fairPlayTeam != null ? fairPlayTeam.getName() : "No teams available";
     }
-    private String calculateTeamEfficiency() {
-        String mostEfficientTeam = "";
-        double maxEfficiency = 0.0;
 
+    private List<Team> getAllTeams() {
+        List<Team> allTeams = new ArrayList<>();
+        allTeams.addAll(groupA.getTeams());
+        allTeams.addAll(groupB.getTeams());
+        return allTeams;
+    }
+
+    public double getTeamEfficiency(String teamName) {
+        Team team = findTeamByName(teamName);
+        if (team != null) {
+            return (double) team.getWonMatches() / team.getPlayedMatches();
+        }
+        return -1; // Indicate that the team was not found
+    }
+
+    public double getPlayerEfficiency(String teamName, int shirtNumber, String playerName) {
+        Team team = findTeamByName(teamName);
+        if (team != null) {
+            for (Player player : team.getPlayers()) {
+                if (player.getShirtNumber() == shirtNumber && player.getName().equalsIgnoreCase(playerName)) {
+                    System.out.println("Player found: " + playerName);
+                    System.out.println("Matches played: " + player.getMatchesPlayed());
+                    System.out.println("Goals scored: " + player.getGoalsScored());
+                    return player.calculateEfficiency();
+                }
+            }
+        }
+        System.out.println("Player not found: " + playerName);
+        return -1; // Indicate that the player was not found
+    }
+
+    private Team findTeamByName(String teamName) {
         for (Team team : groupA.getTeams()) {
-            double efficiency = (double) team.getGoalsFor() / team.getPlayedMatches();
-            if (efficiency > maxEfficiency) {
-                maxEfficiency = efficiency;
-                mostEfficientTeam = team.getName();
+            if (team.getName().equalsIgnoreCase(teamName)) {
+                return team;
             }
         }
-
         for (Team team : groupB.getTeams()) {
-            double efficiency = (double) team.getGoalsFor() / team.getPlayedMatches();
-            if (efficiency > maxEfficiency) {
-                maxEfficiency = efficiency;
-                mostEfficientTeam = team.getName();
+            if (team.getName().equalsIgnoreCase(teamName)) {
+                return team;
             }
         }
-
-        return mostEfficientTeam + " with an efficiency of " + maxEfficiency;
+        return null;
     }
 
-    private String calculatePlayerEfficiency() {
-        String mostEfficientPlayer = "";
-        double maxEfficiency = 0.0;
-
-        for (Day day : groupA.getDays()) {
-            for (Match match : day.getMatches()) {
-                for (Goal goal : match.getGoals()) {
-                    int playerGoals = 0;
-                    int playerMatches = 0;
-                    for (Day d : groupA.getDays()) {
-                        for (Match m : d.getMatches()) {
-                            for (Goal g : m.getGoals()) {
-                                if (g.getPlayerName().equals(goal.getPlayerName())) {
-                                    playerGoals++;
-                                }
-                            }
-                            if (m.hasPlayer(goal.getPlayerName())) {
-                                playerMatches++;
-                            }
-                        }
-                    }
-                    for (Day d : groupB.getDays()) {
-                        for (Match m : d.getMatches()) {
-                            for (Goal g : m.getGoals()) {
-                                if (g.getPlayerName().equals(goal.getPlayerName())) {
-                                    playerGoals++;
-                                }
-                            }
-                            if (m.hasPlayer(goal.getPlayerName())) {
-                                playerMatches++;
-                            }
-                        }
-                    }
-                    double efficiency = (double) playerGoals / playerMatches;
-                    if (efficiency > maxEfficiency) {
-                        maxEfficiency = efficiency;
-                        mostEfficientPlayer = goal.getPlayerName();
-                    }
-                }
-            }
-        }
-
-        return mostEfficientPlayer + " with an efficiency of " + maxEfficiency;
-    }
-
-    private String calculateRefereeCardIndex() {
+    public String calculateRefereeCardIndex() {
         String refereeWithMostCards = "";
         int maxCards = 0;
+        HashMap<String, Integer> refereeCardsMap = new HashMap<>();
 
         for (Day day : groupA.getDays()) {
             for (Match match : day.getMatches()) {
                 for (Card card : match.getCards()) {
-                    int refereeCards = 0;
-                    for (Day d : groupA.getDays()) {
-                        for (Match m : d.getMatches()) {
-                            for (Card c : m.getCards()) {
-                                if (c.getReferee().getId().equals(card.getReferee().getId())) {
-                                    refereeCards++;
-                                }
-                            }
-                        }
-                    }
-                    for (Day d : groupB.getDays()) {
-                        for (Match m : d.getMatches()) {
-                            for (Card c : m.getCards()) {
-                                if (c.getReferee().getId().equals(card.getReferee().getId())) {
-                                    refereeCards++;
-                                }
-                            }
-                        }
-                    }
-                    if (refereeCards > maxCards) {
-                        maxCards = refereeCards;
-                        refereeWithMostCards = card.getReferee().getId();
-                    }
+                    String refereeName = card.getReferee().getName();
+                    refereeCardsMap.put(refereeName, refereeCardsMap.getOrDefault(refereeName, 0) + 1);
                 }
+            }
+        }
+
+        for (Day day : groupB.getDays()) {
+            for (Match match : day.getMatches()) {
+                for (Card card : match.getCards()) {
+                    String refereeName = card.getReferee().getName();
+                    refereeCardsMap.put(refereeName, refereeCardsMap.getOrDefault(refereeName, 0) + 1);
+                }
+            }
+        }
+
+        for (Map.Entry<String, Integer> entry : refereeCardsMap.entrySet()) {
+            if (entry.getValue() > maxCards) {
+                maxCards = entry.getValue();
+                refereeWithMostCards = entry.getKey();
             }
         }
 
         return refereeWithMostCards + " with " + maxCards + " cards";
     }
+    public String getCentralRefereeForMatch(String teamName1, String teamName2) {
+        for (Day day : groupA.getDays()) {
+            for (Match match : day.getMatches()) {
+                if (match.getTeam1().getName().equals(teamName1) && match.getTeam2().getName().equals(teamName2)) {
+                    for (Referee referee : match.getReferees()) {
+                        if (referee.getType().equals("C")) {
+                            return referee.getName();
+                        }
+                    }
+                }
+            }
+        }
+        for (Day day : groupB.getDays()) {
+            for (Match match : day.getMatches()) {
+                if (match.getTeam1().getName().equals(teamName1) && match.getTeam2().getName().equals(teamName2)) {
+                    for (Referee referee : match.getReferees()) {
+                        if (referee.getType().equals("C")) {
+                            return referee.getName();
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
 
 
 

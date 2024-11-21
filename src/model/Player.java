@@ -6,6 +6,8 @@ public class Player {
     private String name;
     private Country country;
     private Position position;
+    private int matchesPlayed;
+    private int goalsScored;
 
     /**
      * Description: Constructor to initialize a Player object
@@ -19,6 +21,8 @@ public class Player {
         this.name = name;
         this.country = country;
         this.position = position;
+        this.matchesPlayed = 0;
+        this.getGoalsScored();
     }
 
     public int getShirtNumber() {
@@ -51,6 +55,38 @@ public class Player {
 
     public void setPosition(Position position) {
         this.position = position;
+    }
+
+    public int getMatchesPlayed() {
+        return matchesPlayed;
+    }
+
+    public void setMatchesPlayed(int matchesPlayed){
+        this.matchesPlayed = matchesPlayed;
+    }
+    public int getGoalsScored() {
+        return goalsScored;
+    }
+
+    public void setGoalsScored(int goalsScored) {
+        this.goalsScored = goalsScored;
+    }
+
+    public double calculateEfficiency() {
+        System.out.println("Calculating efficiency for player: " + name);
+        System.out.println("Matches played: " + matchesPlayed);
+        System.out.println("Goals scored: " + goalsScored);
+        return matchesPlayed > 0 ? (double) goalsScored / matchesPlayed : 0;
+    }
+
+    public void incrementGoalsScored() {
+        this.goalsScored++;
+        System.out.println("Updated goals scored for player: " + name + " to " + goalsScored);
+    }
+
+    public void incrementMatchesPlayed() {
+        this.matchesPlayed++;
+        System.out.println("Updated matches played for player: " + name + " to " + matchesPlayed);
     }
 
     /**

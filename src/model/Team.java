@@ -18,6 +18,8 @@ public class Team {
     private int goalsFor;
     private int goalsAgainst;
     private int points;
+    private int yellowCards;
+    private int redCards;
 
     /**
      * Description: Constructor to initialize a Team object
@@ -37,6 +39,8 @@ public class Team {
         this.goalsFor = 0;
         this.goalsAgainst = 0;
         this.points = 0;
+        this.yellowCards = 0;
+        this.redCards = 0;
     }
 
     public String getName() {
@@ -99,9 +103,20 @@ public class Team {
         return goalsFor - goalsAgainst;
     }
 
-    public void addMatchResult(int goalsFor, int goalsAgainst) {
-        this.goalsFor += goalsFor;
-        this.goalsAgainst += goalsAgainst;
+    public int getYellowCards() {
+        return yellowCards;
+    }
+
+    public int getRedCards() {
+        return redCards;
+    }
+
+    public void addYellowCard() {
+        this.yellowCards++;
+    }
+
+    public void addRedCard() {
+        this.redCards++;
     }
 
     public int getPoints() {
@@ -144,7 +159,10 @@ public class Team {
      * */
 
     public void preLoadPlayers(List<Team> teams) {
-        List<String> names = Arrays.asList("Juan", "Pedro", "Luis", "Carlos", "Jose", "Pep", "Andrea", "JuanJoe", "Mario", "Sergio", "Miguel", "Fernando", "Roberto", "Alberto", "Ricardo", "Javier", "Hector", "Pablo", "Diego", "Manuel");
+        List<String> names = new ArrayList<>();
+        for (int i = 1; i <= 1000; i++) {
+            names.add(String.format("Player%03d", i));
+        }
         List<Country> countries = Arrays.asList(Country.values());
         List<Position> positions = Arrays.asList(Position.values());
 
@@ -213,6 +231,16 @@ public class Team {
             }
         }
         return false;
+    }
+
+
+    public Player findPlayerByNameAndNumber(String playerName, int shirtNumber) {
+        for (Player player : players) {
+            if (player.getName().equalsIgnoreCase(playerName) && player.getShirtNumber() == shirtNumber) {
+                return player;
+            }
+        }
+        return null;
     }
 
     /**
