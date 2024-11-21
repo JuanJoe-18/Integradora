@@ -12,7 +12,7 @@ public class Day {
     /**
      * Description: This constructor initializes a Day object with the given parameters.
      * @param date the date of the day.
-          * @param name the name of the day.
+     * @param name the name of the day.
      */
 
     public Day(String name, LocalDate date ) {

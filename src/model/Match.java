@@ -16,6 +16,7 @@ public class Match {
 
     /**
      * Description: Constructor to initialize a Match object
+     * post: A Match object is created
      * @param team1 The first team
      * @param team2 The second team
      * @param team1Goals The number of goals scored by the first team
@@ -43,7 +44,11 @@ public class Match {
         goals.add(goal);
     }
 
-
+    /**
+     * Description: This method adds a referee to the match
+     * pre: The referee is not null
+     * post: The referee is added to the match
+     */
     public ArrayList<Referee> getReferees() {
         return referees;
     }
@@ -93,6 +98,11 @@ public class Match {
         this.dateTime = dateTime;
     }
 
+    /**
+     * Description: This method adds a card to the match
+     * pre: The card is not null
+     * post: The card is added to the match
+     */
     public void addCard(Card card) {
         cards.add(card);
     }

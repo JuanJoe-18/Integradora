@@ -11,6 +11,7 @@ public class Player {
 
     /**
      * Description: Constructor to initialize a Player object
+     * post: A Player object is created
      * @param shirtNumber The shirt number of the player
      * @param name The name of the player
      * @param country The country of the player
@@ -72,6 +73,11 @@ public class Player {
         this.goalsScored = goalsScored;
     }
 
+    /**
+     * Description: This method calculates the efficiency of the player based on the number of matches played
+     * and the number of goals scored.
+     * @return double, the efficiency of the player
+     */
     public double calculateEfficiency() {
         System.out.println("Calculating efficiency for player: " + name);
         System.out.println("Matches played: " + matchesPlayed);
@@ -79,15 +85,15 @@ public class Player {
         return matchesPlayed > 0 ? (double) goalsScored / matchesPlayed : 0;
     }
 
+   /**
+     * Description: This method increments the number of goals scored by the player.
+     */
     public void incrementGoalsScored() {
         this.goalsScored++;
         System.out.println("Updated goals scored for player: " + name + " to " + goalsScored);
     }
 
-    public void incrementMatchesPlayed() {
-        this.matchesPlayed++;
-        System.out.println("Updated matches played for player: " + name + " to " + matchesPlayed);
-    }
+
 
     /**
      * Description: This method returns a string representation of the Player object.

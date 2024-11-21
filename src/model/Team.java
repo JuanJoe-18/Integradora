@@ -23,6 +23,7 @@ public class Team {
 
     /**
      * Description: Constructor to initialize a Team object
+     * post: A Team object is created
      * @param name The name of the team
      * @param country The country of the team
      * @param nameTechnicalDirector The name of the technical director of the team
@@ -109,14 +110,6 @@ public class Team {
 
     public int getRedCards() {
         return redCards;
-    }
-
-    public void addYellowCard() {
-        this.yellowCards++;
-    }
-
-    public void addRedCard() {
-        this.redCards++;
     }
 
     public int getPoints() {
@@ -224,6 +217,11 @@ public class Team {
         return true;
     }
 
+    /**
+     * Description: This method finds a player by name in the team
+     * @param playerName The name of the player
+     * @return The player if it exists, null otherwise
+     * */
     public boolean hasPlayer(String playerName) {
         for (Player player : players) { // Asumiendo que tienes una lista de jugadores llamada 'players'
             if (player.getName().equalsIgnoreCase(playerName)) {
@@ -231,16 +229,6 @@ public class Team {
             }
         }
         return false;
-    }
-
-
-    public Player findPlayerByNameAndNumber(String playerName, int shirtNumber) {
-        for (Player player : players) {
-            if (player.getName().equalsIgnoreCase(playerName) && player.getShirtNumber() == shirtNumber) {
-                return player;
-            }
-        }
-        return null;
     }
 
     /**

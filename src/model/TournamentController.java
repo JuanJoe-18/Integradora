@@ -98,40 +98,6 @@ public class TournamentController {
      * pre: referees must be initialized.
      * pos: the referees that are part of the tournament are preloaded.
      */
-    /*
-    SIERRA_LEONE,
-    SINGAPORE,
-    SLOVAKIA,
-    SLOVENIA,
-    SOLOMON_ISLANDS,
-    SOMALIA,
-    SOUTH_AFRICA,
-    SOUTH_SUDAN,
-    SPAIN,
-    SRI_LANKA,
-    SUDAN,
-    SURINAME,
-    SWEDEN,
-    SWITZERLAND,
-    SYRIA,
-    TAIWAN,
-    TAJIKISTAN,
-    TANZANIA,
-    THAILAND,
-    TIMOR_LESTE,
-    TOGO,
-    TONGA,
-    TRINIDAD_AND_TOBAGO,
-    TUNISIA,
-    TURKEY,
-    TURKMENISTAN,
-    TUVALU,
-    UGANDA
-    *
-    *
-    *
-    * */
-
     public void preLoadReferees() {
         referees.add(new Referee("1", "Juan", "Colombia", "A"));
         referees.add(new Referee("2", "Pedro", "Spain", "A"));
@@ -439,17 +405,45 @@ public class TournamentController {
         return true;
     }
 
+    /**
+     * Description: The updatePlayerMatchesPlayed method is responsible for updating the matches played of the players of a team.
+     * pre: team must be initialized.
+     * pos: the matches played of the players of the team are updated.
+     *
+     * @param team, Team with the team.
+     */
+
     private void updatePlayerMatchesPlayed(Team team) {
         for (Player player : team.getPlayers()) {
             player.setMatchesPlayed(player.getMatchesPlayed() + 1);
         }
     }
 
+    /**
+     * Description: The updatePlayerGoals method is responsible for updating the goals of the players of a team.
+     * pre: team must be initialized.
+     * pos: the goals of the players of the team are updated.
+     *
+     * @param team,  Team with the team.
+     * @param goals, int with the goals.
+     */
+
     private void updatePlayerGoals(Team team, int goals) {
         for (Player player : team.getPlayers()) {
             player.setGoalsScored(player.getGoalsScored() + goals);
         }
     }
+
+    /**
+     * Description: The findMatch method is responsible for finding a match between two teams.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: the match between the two teams is found.
+     *
+     * @param teamName1, String with the name of the first team.
+     * @param teamName2, String with the name of the second team.
+     * @return Match, the match between the two teams.
+     */
 
     private Match findMatch(String teamName1, String teamName2) {
         for (Day day : groupA.getDays()) {
@@ -471,6 +465,21 @@ public class TournamentController {
         return null;
     }
 
+    /**
+     * Description: The registerGoalByPlayer method is responsible for registering a goal scored by a player in a match of the tournament.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: true is returned if the goal is registered successfully.
+     * pos: false is returned if the match is not found or the player is not found.
+     *
+     * @param team1Name,       String with the name of the first team.
+     * @param team2Name,       String with the name of the second team.
+     * @param shirtNumber,     int with the shirt number of the player.
+     * @param playerName,      String with the name of the player.
+     * @param assistPlayerName, String with the name of the player who assisted the goal.
+     * @return boolean, true if the goal is registered successfully, false if the match is not found or the player is not found.
+     */
+
     public boolean registerGoalByPlayer(String team1Name, String team2Name, int shirtNumber, String playerName, String assistPlayerName) {
         Match match = findMatchByTeams(team1Name, team2Name);
         if (match != null) {
@@ -485,6 +494,17 @@ public class TournamentController {
         }
         return false;
     }
+
+    /**
+     * Description: The findMatchByTeams method is responsible for finding a match between two teams.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: the match between the two teams is found.
+     *
+     * @param team1Name, String with the name of the first team.
+     * @param team2Name, String with the name of the second team.
+     * @return Match, the match between the two teams.
+     */
     private Match findMatchByTeams(String team1Name, String team2Name) {
         for (Day day : groupA.getDays()) {
             for (Match match : day.getMatches()) {
@@ -504,6 +524,17 @@ public class TournamentController {
         }
         return null; // Match not found
     }
+
+    /**
+     * Description: The findPlayerByNameAndNumber method is responsible for finding a player by name and shirt number.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: the player is found.
+     *
+     * @param playerName,   String with the name of the player.
+     * @param shirtNumber, int with the shirt number of the player.
+     * @return Player, the player.
+     */
     private Player findPlayerByNameAndNumber(String playerName, int shirtNumber) {
         for (Team team : groupA.getTeams()) {
             for (Player player : team.getPlayers()) {
@@ -522,6 +553,20 @@ public class TournamentController {
         return null; // Player not found
     }
 
+    /**
+     * Description: The registerCardtoPlayer method is responsible for registering a card to a player in a match of the tournament.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: true is returned if the card is registered successfully.
+     * pos: false is returned if the match is not found, the player is not found or the referee is not assigned to the match.
+     *
+     * @param teamName1,   String with the name of the first team.
+     * @param teamName2,   String with the name of the second team.
+     * @param playerName,  String with the name of the player.
+     * @param cardType,    CardType with the type of the card.
+     * @param refereeName, String with the name of the referee.
+     * @return boolean, true if the card is registered successfully, false if the match is not found, the player is not found or the referee is not assigned to the match.
+     */
     public boolean registerCardtoPlayer(String teamName1, String teamName2, String playerName, CardType cardType, String refereeName) {
         Referee referee = null;
         for (Referee r : referees) {
@@ -547,6 +592,20 @@ public class TournamentController {
         return false;
     }
 
+    /**
+     * Description: The registerCard method is responsible for registering a card to a player in a match of the tournament.
+     * pre: group must be initialized.
+     * pos: true is returned if the card is registered successfully.
+     * pos: false is returned if the match is not found, the player is not found or the referee is not assigned to the match.
+     *
+     * @param group,       Group with the group.
+     * @param teamName1,   String with the name of the first team.
+     * @param teamName2,   String with the name of the second team.
+     * @param playerName,  String with the name of the player.
+     * @param cardType,    CardType with the type of the card.
+     * @param referee,     Referee with the referee.
+     * @return boolean, true if the card is registered successfully, false if the match is not found, the player is not found or the referee is not assigned to the match.
+     */
     private boolean registerCard(Group group, String teamName1, String teamName2, String playerName, CardType cardType, Referee referee) {
         for (Day day : group.getDays()) {
             for (Match match : day.getMatches()) {
@@ -571,6 +630,14 @@ public class TournamentController {
         return false;
     }
 
+    /**
+     * Description: The showStandings method is responsible for showing the standings of the tournament.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: the standings of the tournament are shown.
+     *
+     * @return String, a message with the standings of the tournament.
+     */
     public String showStandings() {
         StringBuilder sb = new StringBuilder();
         sb.append("-----------------------------------------------------------\n");
@@ -587,6 +654,14 @@ public class TournamentController {
         return sb.toString();
     }
 
+    /**
+     * Description: The showStatistics method is responsible for showing the statistics of the tournament.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: the statistics of the tournament are shown.
+     *
+     * @return String, a message with the statistics of the tournament.
+     */
     public String showStatistics() {
         StringBuilder sb = new StringBuilder();
         sb.append("-----------------------------------------------------------\n");
@@ -599,6 +674,14 @@ public class TournamentController {
         return sb.toString();
     }
 
+    /**
+     * Description: The calculateTopScorer method is responsible for calculating the top scorer of the tournament.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: the top scorer of the tournament is calculated.
+     *
+     * @return String, a message with the top scorer of the tournament.
+     */
     public String calculateTopScorer() {
         String topScorer = "";
         int maxGoals = 0;
@@ -642,6 +725,14 @@ public class TournamentController {
         return topScorer + " with " + maxGoals + " goals";
     }
 
+    /**
+     * Description: The calculateFairPlayTeam method is responsible for calculating the fair play team of the tournament.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: the fair play team of the tournament is calculated.
+     *
+     * @return String, a message with the fair play team of the tournament.
+     */
     public String calculateFairPlayTeam() {
         Team fairPlayTeam = null;
         int minCards = Integer.MAX_VALUE;
@@ -657,6 +748,14 @@ public class TournamentController {
         return fairPlayTeam != null ? fairPlayTeam.getName() : "No teams available";
     }
 
+    /**
+     * Description: The getAllTeams method is responsible for getting all the teams of the tournament.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: all the teams of the tournament are returned.
+     *
+     * @return List<Team>, a list with all the teams of the tournament.
+     */
     private List<Team> getAllTeams() {
         List<Team> allTeams = new ArrayList<>();
         allTeams.addAll(groupA.getTeams());
@@ -664,6 +763,15 @@ public class TournamentController {
         return allTeams;
     }
 
+    /**
+     * Description: The getTeamEfficiency method is responsible for getting the efficiency of a team in the tournament.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: the efficiency of the team in the tournament is returned.
+     *
+     * @param teamName, String with the name of the team.
+     * @return double, the efficiency of the team in the tournament.
+     */
     public double getTeamEfficiency(String teamName) {
         Team team = findTeamByName(teamName);
         if (team != null) {
@@ -672,6 +780,18 @@ public class TournamentController {
         return -1; // Indicate that the team was not found
     }
 
+
+    /**
+     * Description: The getPlayerEfficiency method is responsible for getting the efficiency of a player in a team of the tournament.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: the efficiency of the player in the team of the tournament is returned.
+     *
+     * @param teamName,   String with the name of the team.
+     * @param shirtNumber, int with the shirt number of the player.
+     * @param playerName, String with the name of the player.
+     * @return double, the efficiency of the player in the team of the tournament.
+     */
     public double getPlayerEfficiency(String teamName, int shirtNumber, String playerName) {
         Team team = findTeamByName(teamName);
         if (team != null) {
@@ -688,6 +808,15 @@ public class TournamentController {
         return -1; // Indicate that the player was not found
     }
 
+    /**
+     * Description: The findTeamByName method is responsible for finding a team by name.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: the team is found.
+     *
+     * @param teamName, String with the name of the team.
+     * @return Team, the team.
+     */
     private Team findTeamByName(String teamName) {
         for (Team team : groupA.getTeams()) {
             if (team.getName().equalsIgnoreCase(teamName)) {
@@ -702,6 +831,14 @@ public class TournamentController {
         return null;
     }
 
+    /**
+     * Description: The calculateRefereeCardIndex method is responsible for calculating the referee card index of the tournament.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: the referee card index of the tournament is calculated.
+     *
+     * @return String, a message with the referee card index of the tournament.
+     */
     public String calculateRefereeCardIndex() {
         String refereeWithMostCards = "";
         int maxCards = 0;
@@ -734,6 +871,17 @@ public class TournamentController {
 
         return refereeWithMostCards + " with " + maxCards + " cards";
     }
+
+    /**
+     * Description: The getCentralRefereeForMatch method is responsible for getting the central referee for a match between two teams.
+     * pre: groupA must be initialized.
+     * pre: groupB must be initialized.
+     * pos: the central referee for the match between the two teams is returned.
+     *
+     * @param teamName1, String with the name of the first team.
+     * @param teamName2, String with the name of the second team.
+     * @return String, the central referee for the match between the two teams.
+     */
     public String getCentralRefereeForMatch(String teamName1, String teamName2) {
         for (Day day : groupA.getDays()) {
             for (Match match : day.getMatches()) {
@@ -759,16 +907,4 @@ public class TournamentController {
         }
         return null;
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }

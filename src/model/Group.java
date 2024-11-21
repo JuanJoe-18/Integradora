@@ -123,6 +123,12 @@ public class Group {
         }
     }
 
+    /**
+     * Description: This method shows the fixture of the group
+     * pre: The group has a fixture
+     * post: The fixture of the group is shown
+     * @return string with the fixture of the group
+     * */
     public String showFormattedFixture() {
         StringBuilder sb = new StringBuilder();
         for (Day day : days) {
@@ -135,12 +141,24 @@ public class Group {
         return sb.toString();
     }
 
+    /**
+     * Description: This method calculates the standings of the group
+     * pre: The group has played all matches
+     * post: The teams in the group are sorted by points, goal difference, goals for, and goals against
+     * */
     public void calculateStandings() {
         teams.sort(Comparator.comparingInt(Team::getPoints).reversed()
                 .thenComparingInt(Team::getGoalDifference).reversed()
                 .thenComparingInt(Team::getGoalsFor).reversed()
                 .thenComparingInt(Team::getGoalsAgainst));
     }
+
+    /**
+     * Description: This method shows the standings of the group
+     * pre: The group has played all matches
+     * post: The standings of the group are shown
+     * @return string with the standings of the group
+     * */
 
     public String showStandings() {
         calculateStandings();

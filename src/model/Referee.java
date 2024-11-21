@@ -9,6 +9,7 @@ public class Referee {
 
     /**
      * Description: Constructor to initialize a Referee object
+     * post: A Referee object is created with the given parameters
      * @param id The ID of the referee
      * @param name The name of the referee
      * @param country The country of the referee

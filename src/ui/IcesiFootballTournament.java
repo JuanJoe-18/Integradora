@@ -59,7 +59,11 @@ public class IcesiFootballTournament {
 
     }
 
-
+    /**
+     * Description: This method displays the first menu of the program Pre:
+     * Scanner rd might be initialized
+     *
+     */
 
     public void firstMenu (){
         int option;
@@ -111,7 +115,11 @@ public class IcesiFootballTournament {
         } while (option != 0);
 
     }
-
+    /**
+     * Description: This method displays the second menu of the program Pre:
+     * Scanner rd might be initialized
+     *
+     */
 
     public  void secondMenu (){
         int option;
@@ -270,8 +278,8 @@ public class IcesiFootballTournament {
     }
 
     /**
-     * Description: This method assigns a referee to a match Pre: Scanner rd
-     * might be initialized
+     * Description: This method assigns a referee to a match Pre: Scanner rd might
+     * be initialized
      *
      */
     public void assignRefereeToMatch() {
@@ -320,6 +328,12 @@ public class IcesiFootballTournament {
         }
     }
 
+    /**
+     * Description: This method registers a goal by a player and his assist Pre:
+     * Scanner rd might be initialized
+     *
+     */
+
     public void registerGoalByPlayer() {
         System.out.println("Enter the name of team 1");
         String team1Name = rd.nextLine();
@@ -340,6 +354,11 @@ public class IcesiFootballTournament {
         }
     }
 
+    /**
+     * Description: This method registers a card by a player Pre: Scanner rd might be
+     * initialized
+     *
+     */
     public void registerCardsByPlayers() {
         System.out.println("Enter the name of team 1:");
         String teamName1 = rd.nextLine();
@@ -365,12 +384,20 @@ public class IcesiFootballTournament {
         }
     }
 
-
-
+    /**
+     * Description: This method shows the standings of the tournament Pre: Scanner rd
+     * might be initialized
+     */
 
     public void showStandings() {
         System.out.println(ctrl.showStandings());
     }
+
+    /**
+     * Description: This method shows the statistics of the tournament Pre: Scanner
+     * rd might be initialized
+     *
+     */
 
     public void showStatistics() {
         int option;
@@ -402,6 +429,12 @@ public class IcesiFootballTournament {
         } while (option != 0);
     }
 
+    /**
+     * Description: This method shows the efficiency of a team Pre: Scanner rd might
+     * be initialized
+     *
+     */
+
     public void showTeamEfficiency() {
         System.out.println("Enter the name of the team:");
         String teamName = rd.nextLine();
@@ -413,6 +446,12 @@ public class IcesiFootballTournament {
             System.out.println("Team not found.");
         }
     }
+
+    /**
+     * Description: This method shows the efficiency of a player Pre: Scanner rd might
+     * be initialized
+     *
+     */
 
     public void showPlayerEfficiency() {
         System.out.println("Enter the name of the team:");

@@ -6,7 +6,14 @@ public class Card {
     private CardType cardType;
     private Referee referee;
 
-
+    /**
+     * Description: Constructor to initialize a Card object
+     * post: A Card object is created
+     * @param teamName The name of the team
+     * @param playerName The name of the player
+     * @param cardType The type of card
+     * @param referee The referee who gave the card
+     */
     public Card(String teamName, String playerName, CardType cardType, Referee referee) {
         this.teamName = teamName;
         this.playerName = playerName;
@@ -42,6 +49,11 @@ public class Card {
         return referee;
     }
 
+    /**
+     * Description: This method returns a string representation of the Card object
+     * post: A string representation of the Card object is returned
+     * @return A string representation of the Card object
+     */
     @Override
     public String toString() {
         return cardType + " card for " + playerName + " from " + teamName + " by " + referee.getName();
